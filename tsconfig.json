@@ -8,12 +8,12 @@
     "jsx": "react-jsx",
     "baseUrl": "src",
     "paths": {
-      "app/*": ["app/*"],
-      "pages/*": ["pages/*"],
-      "features/*": ["features/*"],
-      "entities/*": ["entities/*"],
-      "shared/*": ["shared/*"],
-      "widgets/*": ["widgets/*"]
+      "@app/*": ["app/*"],
+      "@pages/*": ["pages/*"],
+      "@features/*": ["features/*"],
+      "@entities/*": ["entities/*"],
+      "@shared/*": ["shared/*"],
+      "@widgets/*": ["widgets/*"]
     },
     "esModuleInterop": true,
     "skipLibCheck": true,
