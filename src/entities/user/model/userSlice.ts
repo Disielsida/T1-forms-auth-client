@@ -1,11 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '@shared/types/user';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { User } from '@shared/types/user';
 
-interface UserState {
+type UserState = {
   users: User[];
   isLoading: boolean;
   error: string | null;
-}
+};
 
 const initialState: UserState = {
   users: [],
@@ -27,7 +27,14 @@ const userSlice = createSlice({
       state.error = action.payload;
     },
   },
+
+  selectors: {
+    selectUsers: (state) => state.users,
+    selectIsLoadingUsers: (state) => state.isLoading,
+    selectUserError: (state) => state.error,
+  },
 });
 
 export const { setUsers, setLoading, setError } = userSlice.actions;
+export const { selectUsers, selectIsLoadingUsers, selectUserError } = userSlice.selectors;
 export default userSlice.reducer;

@@ -1,0 +1,50 @@
+.pageWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 16px;
+  margin-top: -50px;
+}
+
+.content {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+
+.formContainer {
+  width: 100%;
+  max-width: 600px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  background-color: transparent;
+}
+
+.titleWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  gap: 8px;
+}
+
+.title {
+  text-align: left;
+  margin: 0;
+}
+
+.titleUnderline {
+  height: 2px;
+  background-color: #c5c5c5;
+  width: 100%;
+  border-radius: 1px;
+  margin-top: -15px;
+}
