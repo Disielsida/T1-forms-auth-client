@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAppDispatch } from './redux';
+import { useAppDispatch } from '@shared/lib/hooks/redux';
 import { fetchCurrentUserThunk } from '@features/auth/model/thunks/fetchCurrentUser';
 
 export const useInitAuth = () => {

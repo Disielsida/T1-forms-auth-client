@@ -7,10 +7,12 @@ export const LoginPage = () => {
     <div className={styles.pageWrapper}>
       <div className={styles.formContainer}>
         <div className={styles.content}>
-          <T as="h3" font="Header/HL3" className={styles.title}>
-            Вход в систему
+          <T as="h3" font="Header/HL3" className={styles.titleWrapper}>
+            <div className={styles.titleInner}>
+              <span className={styles.title}>Вход в систему</span>
+              <div className={styles.titleUnderline} />
+            </div>
           </T>
-          <div className={styles.titleUnderline} />
           <LoginForm />
         </div>
       </div>

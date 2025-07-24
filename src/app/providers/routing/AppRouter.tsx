@@ -1,9 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
 import { HomePage } from '@pages/Home';
 import { LoginPage } from '@pages/Login';
-import { PrivateRoute } from '@shared/lib/routing/PrivateRoute';
+import { PrivateRoute } from './PrivateRoute';
 import { ROUTES } from '@shared/config/routes';
-import { useInitAuth } from '@shared/lib/hooks/useInitAuth';
+import { useInitAuth } from '@features/auth/lib/hooks/useInitAuth';
 import { Layout } from '@widgets/Layout';
 
 export const AppRouter = () => {
