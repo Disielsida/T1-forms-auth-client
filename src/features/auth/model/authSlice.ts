@@ -2,6 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { User } from '@shared/types/user';
 import { loginThunk } from './thunks/login';
 import { fetchCurrentUserThunk } from './thunks/fetchCurrentUser';
+import { logoutThunk } from './thunks/logout';
 
 interface AuthState {
   user: User | null;
@@ -58,6 +59,20 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuth = false;
         state.isAuthChecked = true;
+      })
+      .addCase(logoutThunk.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(logoutThunk.fulfilled, (state) => {
+        state.isLoading = false;
+        state.user = null;
+        state.isAuth = false;
+        state.isAuthChecked = true;
+      })
+      .addCase(logoutThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       });
   },
 });

@@ -13,6 +13,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@admiral-ds/icons": "^4.3.9",
     "@admiral-ds/react-ui": "^8.52.2",
     "@reduxjs/toolkit": "^2.8.2",
     "formik": "^2.4.6",

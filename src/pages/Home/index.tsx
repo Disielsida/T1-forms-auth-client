@@ -16,7 +16,7 @@ export const HomePage = () => {
 
   return (
     <div>
-      <h2 style={{ textAlign: 'center' }}>Список пользователей</h2>
+      <h2>Список пользователей</h2>
       {isLoading && <p>Загрузка...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {!isLoading && !error && <UserTable users={users} />}

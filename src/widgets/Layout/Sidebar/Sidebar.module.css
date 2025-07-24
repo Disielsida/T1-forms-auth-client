@@ -1,0 +1,11 @@
+.sidebar {
+  width: 64px;
+  padding: 50px 12px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.03);
+  z-index: 1;
+  position: relative;
+}

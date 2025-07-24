@@ -4,6 +4,7 @@ import { LoginPage } from '@pages/Login';
 import { PrivateRoute } from '@shared/lib/routing/PrivateRoute';
 import { ROUTES } from '@shared/config/routes';
 import { useInitAuth } from '@shared/lib/hooks/useInitAuth';
+import { Layout } from '@widgets/Layout';
 
 export const AppRouter = () => {
   useInitAuth();
@@ -16,10 +17,12 @@ export const AppRouter = () => {
         path={ROUTES.root}
         element={
           <PrivateRoute>
-            <HomePage />
+            <Layout />
           </PrivateRoute>
         }
-      />
+      >
+        <Route index element={<HomePage />} />
+      </Route>
     </Routes>
   );
 };

@@ -1,0 +1,33 @@
+.modalContent {
+  padding: 16px 0px;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+}
+
+.titleWrapper {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.titleInner {
+  display: inline-block;
+}
+
+.title {
+  margin: 0;
+  text-align: left;
+}
+
+.titleUnderline {
+  height: 2px;
+  background-color: #c5c5c5;
+  width: 100%;
+  border-radius: 1px;
+  margin-top: 4px; /* нормальный отступ от заголовка */
+}
+
