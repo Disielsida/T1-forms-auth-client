@@ -1,11 +1,13 @@
-export const API_BASE_URL = '/api/v1';
+const BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1';
+
+export const API_BASE_URL = BASE;
 
 export const apiRoutes = {
-  users: `${API_BASE_URL}/users`,
-  userById: (id: string) => `${API_BASE_URL}/users/${id}`,
+  users: `${BASE}/users`,
+  userById: (id: string) => `${BASE}/users/${id}`,
   auth: {
-    login: `${API_BASE_URL}/auth/login`,
-    logout: `${API_BASE_URL}/auth/logout`,
-    me: `${API_BASE_URL}/auth/me`,
+    login: `${BASE}/auth/login`,
+    logout: `${BASE}/auth/logout`,
+    me: `${BASE}/auth/me`,
   },
 };
