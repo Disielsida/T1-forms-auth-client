@@ -6,6 +6,7 @@ import { PrivateRoute } from './PrivateRoute';
 import { ROUTES } from '@shared/config/routes';
 import { useInitAuth } from '@features/auth/lib/hooks/useInitAuth';
 import { Layout } from '@widgets/Layout';
+import { EditUserPage } from '@pages/EditUser';
 
 export const AppRouter = () => {
   useInitAuth();
@@ -24,6 +25,7 @@ export const AppRouter = () => {
       >
         <Route index element={<HomePage />} />
         <Route path={ROUTES.userCreate} element={<CreateUserPage />} />
+        <Route path={ROUTES.userEdit(':id')} element={<EditUserPage />} />
       </Route>
     </Routes>
   );

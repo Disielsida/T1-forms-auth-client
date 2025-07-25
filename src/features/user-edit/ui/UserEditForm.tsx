@@ -11,19 +11,21 @@ import {
   Select,
   Option,
 } from '@admiral-ds/react-ui';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from '@shared/config/routes';
-import { useAppDispatch } from '@shared/lib/hooks/redux';
-import { createUserThunk } from '@entities/user/model/thunks/createUser';
-import styles from './UserCreateForm.module.css';
+import { useAppDispatch, useAppSelector } from '@shared/lib/hooks/redux';
+import { editUserThunk } from '@entities/user/model/thunks/editUser';
+import { selectSelectedUser } from '@entities/user/model/userSlice';
+import styles from '@features/user-create/ui/UserCreateForm.module.css';
 import { formatDateToInput, parseInputToDate } from '@shared/utils/date';
+import omit from 'lodash/omit';
 
-interface UserCreateFormValues {
+interface UserEditFormValues {
   name: string;
   surName: string;
-  password: string;
   fullName: string;
   email: string;
+  password: string;
   birthDate?: Date | null;
   telephone?: string;
   employment?: string;
@@ -36,9 +38,7 @@ const employmentOptions = ['Full-time', 'Part-time', 'Contract'];
 const validationSchema = Yup.object({
   name: Yup.string().max(64, 'Макс. длина — 64').required('Обязательное поле'),
   surName: Yup.string().max(64, 'Макс. длина — 64').required('Обязательное поле'),
-  password: Yup.string().required('Обязательное поле'),
   fullName: Yup.string().max(130, 'Макс. длина — 130').required('Обязательное поле'),
-  email: Yup.string().email('Некорректный email').required('Обязательное поле'),
   birthDate: Yup.date().nullable(),
   telephone: Yup.string()
     .optional()
@@ -51,26 +51,30 @@ const validationSchema = Yup.object({
   userAgreement: Yup.boolean().optional(),
 });
 
-export const UserCreateForm = () => {
+export const UserEditForm = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const user = useAppSelector(selectSelectedUser);
   const [submitAttempted, setSubmitAttempted] = React.useState(false);
 
-  const initialValues: UserCreateFormValues = {
-    name: '',
-    surName: '',
-    password: '',
-    fullName: '',
-    email: '',
-    birthDate: null,
-    telephone: '',
-    employment: '',
-    userAgreement: false,
+  if (!user || !id) return null;
+
+  const initialValues: UserEditFormValues = {
+    name: user.name || '',
+    surName: user.surName || '',
+    fullName: user.fullName || '',
+    email: user.email || '',
+    password: '********',
+    birthDate: user.birthDate ? new Date(user.birthDate) : null,
+    telephone: user.telephone || '',
+    employment: user.employment || '',
+    userAgreement: user.userAgreement ?? false,
     global: '',
   };
 
   return (
-    <Formik<UserCreateFormValues>
+    <Formik<UserEditFormValues>
       initialValues={initialValues}
       validationSchema={validationSchema}
       validateOnMount
@@ -79,7 +83,7 @@ export const UserCreateForm = () => {
       onSubmit={async (values, { setSubmitting, setErrors }) => {
         setSubmitAttempted(true);
         try {
-          const dto = {
+          const rawDto = {
             ...values,
             telephone:
               values.telephone && values.telephone !== '+7'
@@ -87,13 +91,14 @@ export const UserCreateForm = () => {
                 : undefined,
             birthDate: values.birthDate?.toISOString(),
           };
-          delete dto.global;
 
-          await dispatch(createUserThunk(dto)).unwrap();
+          const dto = omit(rawDto, ['email', 'password', 'global']);
+
+          await dispatch(editUserThunk({ id, dto })).unwrap();
           navigate(ROUTES.root);
         } catch (e) {
           console.error(e);
-          setErrors({ global: 'Ошибка при создании пользователя' });
+          setErrors({ global: 'Ошибка при редактировании пользователя' });
         } finally {
           setSubmitting(false);
         }
@@ -109,16 +114,27 @@ export const UserCreateForm = () => {
 
         return (
           <Form className={styles.form}>
-            <FieldGroup name="name" placeholder="Имя" autoFocus errors={errors} touched={touched} />
+            <FieldGroup name="name" placeholder="Имя" errors={errors} touched={touched} />
+
             <FieldGroup name="surName" placeholder="Фамилия" errors={errors} touched={touched} />
-            <FieldGroup name="email" placeholder="Email" errors={errors} touched={touched} />
+
+            <FieldGroup
+              name="email"
+              placeholder="Email"
+              disabled
+              errors={errors}
+              touched={touched}
+            />
+
             <FieldGroup
               name="password"
               placeholder="Пароль"
               type="password"
+              disabled
               errors={errors}
               touched={touched}
             />
+
             <FieldGroup
               name="fullName"
               placeholder="Полное имя"
@@ -128,7 +144,7 @@ export const UserCreateForm = () => {
 
             <div className={styles.fieldGroup}>
               <Field name="birthDate">
-                {({ field, form, meta }: FieldProps<Date | null, UserCreateFormValues>) => (
+                {({ field, form, meta }: FieldProps<Date | null, UserEditFormValues>) => (
                   <DateInput
                     placeholder="ДД.ММ.ГГГГ"
                     value={field.value ? formatDateToInput(field.value) : ''}
@@ -228,7 +244,7 @@ export const UserCreateForm = () => {
             )}
 
             <Button type="submit" dimension="m" disabled={shouldDisableSubmit}>
-              Создать пользователя
+              Сохранить изменения
             </Button>
           </Form>
         );
@@ -237,13 +253,16 @@ export const UserCreateForm = () => {
   );
 };
 
+// --- Вспомогательный компонент ---
+
 interface FieldGroupProps {
-  name: keyof UserCreateFormValues;
+  name: keyof UserEditFormValues;
   placeholder: string;
   type?: React.HTMLInputTypeAttribute;
   autoFocus?: boolean;
-  errors: FormikErrors<UserCreateFormValues>;
-  touched: FormikTouched<UserCreateFormValues>;
+  disabled?: boolean;
+  errors: FormikErrors<UserEditFormValues>;
+  touched: FormikTouched<UserEditFormValues>;
 }
 
 const FieldGroup = ({
@@ -251,6 +270,7 @@ const FieldGroup = ({
   placeholder,
   type = 'text',
   autoFocus = false,
+  disabled = false,
   errors,
 }: FieldGroupProps) => (
   <div className={styles.fieldGroup}>
@@ -261,6 +281,7 @@ const FieldGroup = ({
           type={type}
           placeholder={placeholder}
           autoFocus={autoFocus}
+          disabled={disabled}
           status={meta.touched && meta.error ? 'error' : undefined}
           className={styles.field}
         />

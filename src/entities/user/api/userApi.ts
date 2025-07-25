@@ -32,7 +32,7 @@ export const createUser = async (data: CreateUserDto): Promise<User> => {
 /**
  * Обновить пользователя по ID
  */
-export const updateUser = async (id: string, data: UpdateUserDto): Promise<User> => {
+export const updateUser = async (id: string, data: UpdateUserDto): Promise<void> => {
   const res = await fetch(apiRoutes.userById(id), {
     method: 'PATCH',
     credentials: 'include',
@@ -40,8 +40,10 @@ export const updateUser = async (id: string, data: UpdateUserDto): Promise<User>
     body: JSON.stringify(data),
   });
 
-  if (!res.ok) throw new Error(`Failed to update user: ${res.statusText}`);
-  return res.json();
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Failed to update user: ${text}`);
+  }
 };
 
 /**
@@ -54,4 +56,17 @@ export const deleteUser = async (id: string): Promise<void> => {
   });
 
   if (!res.ok) throw new Error(`Failed to delete user: ${res.statusText}`);
+};
+
+/**
+ * Получить пользователя по ID
+ */
+export const getUserById = async (id: string): Promise<User> => {
+  const res = await fetch(apiRoutes.userById(id), {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!res.ok) throw new Error(`Failed to fetch user: ${res.statusText}`);
+  return res.json();
 };
