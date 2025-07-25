@@ -3,7 +3,6 @@ import { T } from '@admiral-ds/react-ui';
 import styles from './LoginPage.module.css';
 
 export const LoginPage = () => {
-  console.log('VITE_API_BASE_URL =', import.meta.env.VITE_API_BASE_URL);
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.formContainer}>

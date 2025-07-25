@@ -6,6 +6,7 @@ export const loginThunk = createAsyncThunk<void, LoginDto, { rejectValue: string
   'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
+      console.log('🧪 loginThunk URL:', apiRoutes.auth.login);
       const { email, password } = credentials;
 
       const response = await fetch(apiRoutes.auth.login, {
