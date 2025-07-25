@@ -251,7 +251,7 @@ export const UserCreateForm = () => {
                     <T
                       as="label"
                       htmlFor="userAgreement"
-                      font="Body/Body 1 Long"
+                      font="Caption/Caption 1"
                       color="Neutral/Neutral 60"
                     >
                       Согласие на обработку персональных данных

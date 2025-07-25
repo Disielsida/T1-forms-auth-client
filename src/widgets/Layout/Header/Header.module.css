@@ -1,10 +1,36 @@
 .header {
   height: 70px;
-  padding: 24px 80px;
+  padding: 24px 63px;
   display: flex;
   align-items: center;
   background-color: #fff;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
   z-index: 2;
   position: relative;
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+
+  border-left: 4px solid var(--admiral-color-Primary_Primary60Main, #e5e5e5);
+  padding-left: 10px;
+}
+
+.email {
+  margin-left: 3px;
+  color: var(--admiral-color-Primary_Primary60Main, #1a5aff);
+}
+
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    gap: 5px;
+    padding: 10px 80px;
+  }
 }

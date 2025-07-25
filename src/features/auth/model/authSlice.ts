@@ -30,6 +30,13 @@ const authSlice = createSlice({
       state.isAuthChecked = true;
     },
   },
+  selectors: {
+    selectCurrentUser: (state) => state.user,
+    selectIsAuth: (state) => state.isAuth,
+    selectIsAuthChecked: (state) => state.isAuthChecked,
+    selectAuthError: (state) => state.error,
+    selectIsAuthLoading: (state) => state.isLoading,
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginThunk.pending, (state) => {
@@ -79,3 +86,10 @@ const authSlice = createSlice({
 
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;
+export const {
+  selectCurrentUser,
+  selectIsAuth,
+  selectIsAuthChecked,
+  selectAuthError,
+  selectIsAuthLoading,
+} = authSlice.selectors;

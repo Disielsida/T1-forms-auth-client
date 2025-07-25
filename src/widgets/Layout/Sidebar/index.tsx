@@ -1,7 +1,11 @@
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Tooltip } from '@admiral-ds/react-ui';
-import { ServiceCloseOutline, ServicePlusCircleOutline } from '@admiral-ds/icons';
+import {
+  ServiceCloseOutline,
+  ServicePlusCircleOutline,
+  SystemHomeOutline,
+} from '@admiral-ds/icons';
 import styles from './Sidebar.module.css';
 import { ROUTES } from '@shared/config/routes';
 import { LogoutModal } from '../LogoutModal';
@@ -9,16 +13,26 @@ import { LogoutModal } from '../LogoutModal';
 export const Sidebar = () => {
   const navigate = useNavigate();
 
+  const homeRef = useRef<HTMLButtonElement>(null);
   const addRef = useRef<HTMLButtonElement>(null);
   const logoutRef = useRef<HTMLButtonElement>(null);
 
+  const [showHomeTooltip, setShowHomeTooltip] = useState(false);
   const [showAddTooltip, setShowAddTooltip] = useState(false);
   const [showLogoutTooltip, setShowLogoutTooltip] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   useEffect(() => {
+    const homeBtn = homeRef.current;
     const addBtn = addRef.current;
     const logoutBtn = logoutRef.current;
+
+    if (homeBtn) {
+      homeBtn.addEventListener('mouseenter', () => setShowHomeTooltip(true));
+      homeBtn.addEventListener('mouseleave', () => setShowHomeTooltip(false));
+      homeBtn.addEventListener('focus', () => setShowHomeTooltip(true));
+      homeBtn.addEventListener('blur', () => setShowHomeTooltip(false));
+    }
 
     if (addBtn) {
       addBtn.addEventListener('mouseenter', () => setShowAddTooltip(true));
@@ -35,6 +49,13 @@ export const Sidebar = () => {
     }
 
     return () => {
+      if (homeBtn) {
+        homeBtn.removeEventListener('mouseenter', () => setShowHomeTooltip(true));
+        homeBtn.removeEventListener('mouseleave', () => setShowHomeTooltip(false));
+        homeBtn.removeEventListener('focus', () => setShowHomeTooltip(true));
+        homeBtn.removeEventListener('blur', () => setShowHomeTooltip(false));
+      }
+
       if (addBtn) {
         addBtn.removeEventListener('mouseenter', () => setShowAddTooltip(true));
         addBtn.removeEventListener('mouseleave', () => setShowAddTooltip(false));
@@ -54,6 +75,25 @@ export const Sidebar = () => {
   return (
     <>
       <aside className={styles.sidebar}>
+        <Button
+          ref={homeRef}
+          dimension="m"
+          appearance="secondary"
+          icon={<SystemHomeOutline />}
+          onClick={() => navigate(ROUTES.root)}
+          displayAsSquare
+          aria-label="На главную"
+          aria-describedby="home-tooltip"
+        />
+        {showHomeTooltip && homeRef.current && (
+          <Tooltip
+            renderContent={() => 'На главную'}
+            targetElement={homeRef.current}
+            tooltipPosition="right"
+            id="home-tooltip"
+          />
+        )}
+
         <Button
           ref={addRef}
           dimension="m"
