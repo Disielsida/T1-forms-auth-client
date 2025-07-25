@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { User } from '@shared/types/user';
 import { fetchUsersThunk } from './thunks/fetchUsers';
+import { deleteUserThunk } from './thunks/deleteUser';
 
 type UserState = {
   users: User[];
@@ -37,6 +38,7 @@ const userSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      // Загрузка пользователей
       .addCase(fetchUsersThunk.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -46,6 +48,20 @@ const userSlice = createSlice({
         state.users = action.payload;
       })
       .addCase(fetchUsersThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+
+      // Удаление пользователя
+      .addCase(deleteUserThunk.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(deleteUserThunk.fulfilled, (state, action: PayloadAction<string>) => {
+        state.isLoading = false;
+        state.users = state.users.filter((user) => user.id !== action.payload);
+      })
+      .addCase(deleteUserThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });
