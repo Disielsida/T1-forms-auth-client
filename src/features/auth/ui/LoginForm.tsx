@@ -1,4 +1,5 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import React from 'react';
+import { Formik, Form, Field, ErrorMessage, FieldProps } from 'formik';
 import * as Yup from 'yup';
 import { Button, TextInput, T } from '@admiral-ds/react-ui';
 import { useAppDispatch } from '@shared/lib/hooks/redux';
@@ -21,6 +22,7 @@ const validationSchema = Yup.object({
 export const LoginForm = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [submitAttempted, setSubmitAttempted] = React.useState(false);
 
   const initialValues: LoginFormValues = {
     email: '',
@@ -34,7 +36,9 @@ export const LoginForm = () => {
       validationSchema={validationSchema}
       validateOnChange
       validateOnBlur
+      validateOnMount
       onSubmit={async (values, { setSubmitting, setErrors }) => {
+        setSubmitAttempted(true);
         try {
           await dispatch(loginThunk(values)).unwrap();
           await dispatch(fetchCurrentUserThunk()).unwrap();
@@ -47,71 +51,54 @@ export const LoginForm = () => {
       }}
     >
       {({ isSubmitting, errors, touched, isValid }) => {
-        const isFormTouched = Object.keys(touched).length > 0;
+        const hasTouchedInvalidFields = Object.keys(touched).some(
+          (key) => touched[key as keyof typeof touched] && errors[key as keyof typeof errors],
+        );
+
+        const shouldDisableSubmit =
+          isSubmitting || (submitAttempted ? !isValid : hasTouchedInvalidFields);
 
         return (
           <Form className={styles.form}>
             <div className={styles.field}>
-              <Field
-                name="email"
-                as={TextInput}
-                placeholder="Email"
-                status={(touched.email && errors.email) || errors.global ? 'error' : undefined}
-              />
-              <ErrorMessage name="email">
-                {(msg) => (
-                  <T
-                    as="div"
-                    font="Body/Body 2 Long"
-                    color="Error/Error 60 Main"
-                    className={styles.errorMessage}
-                  >
-                    {msg}
-                  </T>
+              <Field name="email">
+                {({ field, meta }: FieldProps) => (
+                  <TextInput
+                    {...field}
+                    autoFocus
+                    placeholder="Email"
+                    status={meta.touched && meta.error ? 'error' : undefined}
+                  />
                 )}
-              </ErrorMessage>
+              </Field>
+              <Error name="email" message={errors.email} />
             </div>
 
             <div className={styles.field}>
-              <Field
-                name="password"
-                as={TextInput}
-                type="password"
-                placeholder="Пароль"
-                status={
-                  (touched.password && errors.password) || errors.global ? 'error' : undefined
-                }
-              />
-              <ErrorMessage name="password">
-                {(msg) => (
-                  <T
-                    as="div"
-                    font="Body/Body 2 Long"
-                    color="Error/Error 60 Main"
-                    className={styles.errorMessage}
-                  >
-                    {msg}
-                  </T>
+              <Field name="password">
+                {({ field, meta }: FieldProps) => (
+                  <TextInput
+                    {...field}
+                    type="password"
+                    placeholder="Пароль"
+                    status={meta.touched && meta.error ? 'error' : undefined}
+                  />
                 )}
-              </ErrorMessage>
-
-              {errors.global && (
-                <T
-                  as="div"
-                  font="Body/Body 2 Long"
-                  color="Error/Error 60 Main"
-                  className={styles.errorMessage}
-                >
-                  {errors.global}
-                </T>
-              )}
+              </Field>
+              <Error name="password" message={errors.password} />
             </div>
 
-            <Button
-              type="submit"
-              disabled={isSubmitting || (isFormTouched && !isValid)}
-              dimension="m"
-            >
+            {errors.global && (
+              <T
+                font="Body/Body 2 Long"
+                color="Error/Error 60 Main"
+                className={styles.errorMessage}
+              >
+                {errors.global}
+              </T>
+            )}
+
+            <Button type="submit" dimension="m" disabled={shouldDisableSubmit}>
               Войти
             </Button>
           </Form>
@@ -120,3 +107,18 @@ export const LoginForm = () => {
     </Formik>
   );
 };
+
+const Error = ({ name, message }: { name: string; message?: string }) => (
+  <ErrorMessage name={name}>
+    {(msg) => (
+      <T
+        as="div"
+        font="Body/Body 2 Long"
+        color="Error/Error 60 Main"
+        className={styles.errorMessage}
+      >
+        {message ?? msg}
+      </T>
+    )}
+  </ErrorMessage>
+);

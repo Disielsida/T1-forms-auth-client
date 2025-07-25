@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { HomePage } from '@pages/Home';
 import { LoginPage } from '@pages/Login';
+import { CreateUserPage } from '@pages/CreateUser';
 import { PrivateRoute } from './PrivateRoute';
 import { ROUTES } from '@shared/config/routes';
 import { useInitAuth } from '@features/auth/lib/hooks/useInitAuth';
@@ -22,6 +23,7 @@ export const AppRouter = () => {
         }
       >
         <Route index element={<HomePage />} />
+        <Route path={ROUTES.userCreate} element={<CreateUserPage />} />
       </Route>
     </Routes>
   );

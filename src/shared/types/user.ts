@@ -16,10 +16,10 @@ export interface CreateUserDto {
   password: string;
   fullName: string;
   email: string;
-  birthDate: string;
-  telephone: string;
-  employment: string;
-  userAgreement: boolean;
+  birthDate?: string;
+  telephone?: string;
+  employment?: string;
+  userAgreement?: boolean;
 }
 
 export type UpdateUserDto = Partial<Omit<CreateUserDto, 'password' | 'email'>>;

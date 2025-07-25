@@ -1,0 +1,29 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field {
+  width: 100%;
+  max-width: 100%;
+}
+
+.globalError {
+  padding: 4px 0;
+  color: var(--admiral-color-Error_Error60Main, #d32f2f);
+}
+
+.userAgreementRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}

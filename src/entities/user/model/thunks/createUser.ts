@@ -9,7 +9,10 @@ export const createUserThunk = createAsyncThunk<User, CreateUserDto>(
       const user = await createUser(data);
       return user;
     } catch (error) {
-      return thunkAPI.rejectWithValue(`Failed to create user: ${error}`);
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue('Unknown error');
     }
   },
 );

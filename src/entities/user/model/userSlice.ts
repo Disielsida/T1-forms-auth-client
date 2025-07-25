@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { User } from '@shared/types/user';
+import { fetchUsersThunk } from './thunks/fetchUsers';
 
 type UserState = {
   users: User[];
@@ -32,6 +33,22 @@ const userSlice = createSlice({
     selectUsers: (state) => state.users,
     selectIsLoadingUsers: (state) => state.isLoading,
     selectUserError: (state) => state.error,
+  },
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsersThunk.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchUsersThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.users = action.payload;
+      })
+      .addCase(fetchUsersThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
